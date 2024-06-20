@@ -1,0 +1,714 @@
+[
+  {
+    "name": "employeeName",
+    "title": "员工姓名",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ",
+    "DataType": "STRING"
+  },
+  {
+    "name": "serialNumber",
+    "title": "工号",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "DataType": "STRING"
+  },
+  {
+    "name": "locationCity",
+    "title": "工作所在地",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "ENUM-city",
+    "DataType": "JSON"
+  },
+  {
+    "name": "employeeType",
+    "title": "员工类别",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ ENUM-employeeType",
+    "DataType": "JSON"
+  },
+  {
+    "name": "supplierName",
+    "title": "供应商名称",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "EMPLOYEE_TYPE_REQ",
+    "DataType": "STRING"
+  },
+  {
+    "name": "supplierServiceFee",
+    "title": "供应商服务费(含税)",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "EMPLOYEE_TYPE_REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "positionName",
+    "title": "岗位名称",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ",
+    "DataType": "STRING"
+  },
+  {
+    "name": "positionType",
+    "title": "岗位类别",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ ENUM-positionType",
+    "DataType": "JSON"
+  },
+  {
+    "name": "rank",
+    "title": "职级",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "DataType": "STRING"
+  },
+  {
+    "name": "kpi",
+    "title": "绩效评定",
+    "groupHeader": [
+      {
+        "name": "basicInfo",
+        "title": "员工基础信息"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ",
+    "DataType": "STRING"
+  },
+  {
+    "name": "employmentStatus",
+    "title": "在职状态",
+    "groupHeader": [
+      {
+        "name": "inTheCaseOfLeaving",
+        "title": "在离职情况"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ",
+    "DataType": "JSON"
+  },
+  {
+    "name": "entryTime",
+    "title": "入职时间",
+    "groupHeader": [
+      {
+        "name": "inTheCaseOfLeaving",
+        "title": "在离职情况"
+      }
+    ],
+    "type": "datetime",
+    "rule": "REQ DATE",
+    "DataType": "DATE"
+  },
+  {
+    "name": "resignationTime",
+    "title": "离职时间",
+    "groupHeader": [
+      {
+        "name": "inTheCaseOfLeaving",
+        "title": "在离职情况"
+      }
+    ],
+    "type": "other",
+    "rule": "EMPLOYMENT_STATUS_REQ DATE",
+    "DataType": "DATE"
+  },
+  {
+    "name": "monthsOfEmployment",
+    "title": "在职月份",
+    "groupHeader": [
+      {
+        "name": "inTheCaseOfLeaving",
+        "title": "在离职情况"
+      }
+    ],
+    "type": "other",
+    "DataType": "INTEGER"
+  },
+  {
+    "name": "resignationCompensation",
+    "title": "离职补偿金",
+    "groupHeader": [
+      {
+        "name": "inTheCaseOfLeaving",
+        "title": "在离职情况"
+      }
+    ],
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "basicSalary",
+    "title": "基本工资/月",
+    "groupHeader": [
+      {
+        "name": "salary",
+        "title": "薪资"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualBasicSalary",
+    "title": "全年基本工资",
+    "groupHeader": [
+      {
+        "name": "salary",
+        "title": "薪资"
+      }
+    ],
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "bonus",
+    "title": "奖金/提成(月度/季度)",
+    "groupHeader": [
+      {
+        "name": "salary",
+        "title": "薪资"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "yearEndBonus",
+    "title": "年终奖",
+    "groupHeader": [
+      {
+        "name": "salary",
+        "title": "薪资"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "mealAllowance",
+    "title": "饭补/月",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "transportationAllowance",
+    "title": "交通补贴/月",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "communicationAllowance",
+    "title": "通讯补贴/月",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "maternityAllowance",
+    "title": "生育津贴",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "festivalAllowance",
+    "title": "过节费/年",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "heatstrokePreventionAllowance",
+    "title": "防暑降温补贴",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "heatingAllowance",
+    "title": "供暖费",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "winterAllowance",
+    "title": "防寒补贴",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "otherAllowance",
+    "title": "其他补贴/年",
+    "groupHeader": [
+      {
+        "name": "allowance",
+        "title": "补贴补助"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualAllowance",
+    "title": "全年补助补贴",
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualSalaryPayable",
+    "title": "全年应发工资",
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "socialSecurityBase",
+    "title": "社保基数",
+    "groupHeader": [
+      {
+        "name": "securityBase",
+        "title": "缴纳基数"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "providentFundBase",
+    "title": "公积金基数",
+    "groupHeader": [
+      {
+        "name": "securityBase",
+        "title": "缴纳基数"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "personalEndowmentInsurance",
+    "title": "养老(个人部分)",
+    "groupHeader": [
+      {
+        "name": "personalInsurance",
+        "title": "社保个人部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "personalMedicalInsurance",
+    "title": "医疗(个人部分)",
+    "groupHeader": [
+      {
+        "name": "personalInsurance",
+        "title": "社保个人部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "personalUnemploymentInsurance",
+    "title": "失业(个人部分)",
+    "groupHeader": [
+      {
+        "name": "personalInsurance",
+        "title": "社保个人部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "personalProvidentFund",
+    "title": "公积金(个人部分)",
+    "groupHeader": [
+      {
+        "name": "personalInsurance",
+        "title": "社保个人部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "personalIncomeTax",
+    "title": "个人所得税/年度",
+    "groupHeader": [
+      {
+        "name": "personalInsurance",
+        "title": "社保个人部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualPaymentPerson",
+    "title": "人年度缴纳",
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualPaidSalary",
+    "title": "全年实发工资",
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "enterpriseEndowmentInsurance",
+    "title": "养老(企业部分)",
+    "groupHeader": [
+      {
+        "name": "enterpriseInsurance",
+        "title": "五险一金企业部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "enterpriseMedicalInsurance",
+    "title": "医疗(企业部分)",
+    "groupHeader": [
+      {
+        "name": "enterpriseInsurance",
+        "title": "五险一金企业部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "enterpriseUnemploymentInsurance",
+    "title": "失业(企业部分)",
+    "groupHeader": [
+      {
+        "name": "enterpriseInsurance",
+        "title": "五险一金企业部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "injuryInsurance",
+    "title": "工伤保险",
+    "groupHeader": [
+      {
+        "name": "enterpriseInsurance",
+        "title": "五险一金企业部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "maternityInsurance",
+    "title": "生育保险",
+    "groupHeader": [
+      {
+        "name": "enterpriseInsurance",
+        "title": "五险一金企业部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "enterpriseProvidentFund",
+    "title": "公积金(企业部分)",
+    "groupHeader": [
+      {
+        "name": "enterpriseInsurance",
+        "title": "五险一金企业部分"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualPaymentByTheEnterprise",
+    "title": "企业年度缴纳",
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "companyAnnuity",
+    "title": "企业年金/补充养老险",
+    "groupHeader": [
+      {
+        "name": "additionalInsurance",
+        "title": "额外保险细项"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "supplementaryMedicalInsurance",
+    "title": "补充医疗险",
+    "groupHeader": [
+      {
+        "name": "additionalInsurance",
+        "title": "额外保险细项"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "criticalIllnessInsurance",
+    "title": "重疾险",
+    "groupHeader": [
+      {
+        "name": "additionalInsurance",
+        "title": "额外保险细项"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "accidentInsurance",
+    "title": "意外险",
+    "groupHeader": [
+      {
+        "name": "additionalInsurance",
+        "title": "额外保险细项"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "otherInsurance",
+    "title": "其他保险",
+    "groupHeader": [
+      {
+        "name": "additionalInsurance",
+        "title": "额外保险细项"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "additionalInsuranceExpenses",
+    "title": "额外保险支出小计",
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "disabilityBenefits",
+    "title": "残保金",
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "unionFees",
+    "title": "工会费用",
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "laborInsuranceFee",
+    "title": "劳保费",
+    "groupHeader": [
+      {
+        "name": "welfareExpenses",
+        "title": "福利支出"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "annualPhysicalExamination",
+    "title": "年度体检",
+    "groupHeader": [
+      {
+        "name": "welfareExpenses",
+        "title": "福利支出"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "otherBenefits",
+    "title": "其他福利",
+    "groupHeader": [
+      {
+        "name": "welfareExpenses",
+        "title": "福利支出"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "otherCostDetails",
+    "title": "其他成本细项",
+    "groupHeader": [
+      {
+        "name": "otherCost",
+        "title": "其他成本"
+      }
+    ],
+    "type": "other",
+    "DataType": "STRING"
+  },
+  {
+    "name": "otherCostAmounts",
+    "title": "其他成本总金额",
+    "groupHeader": [
+      {
+        "name": "otherCost",
+        "title": "其他成本"
+      }
+    ],
+    "type": "other",
+    "DataType": "DOUBLE"
+  },
+  {
+    "name": "totalCost",
+    "title": "总成本",
+    "type": "other",
+    "DataType": "DOUBLE"
+  }
+]
