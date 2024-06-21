@@ -52,8 +52,12 @@ fastify.register(require('fastify-plugin')(async (fastify) => {
 
 fastify.register(require('@kne/fastify-response-data-format'));
 
-fastify.listen({ port: 8040 }, (err, address) => {
-  if (err) throw err;
-  // Server is now listening on ${address}
+fastify.then(()=>{
+  fastify.listen({ port: fastify.config.PORT }, (err, address) => {
+    if (err) throw err;
+    // Server is now listening on ${address}
+  });
 });
+
+
 
