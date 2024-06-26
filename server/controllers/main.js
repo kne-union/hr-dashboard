@@ -1,20 +1,22 @@
 const fp = require('fastify-plugin');
 
 module.exports = fp(async (fastify, options) => {
+  const { authenticate } = fastify.account;
+  const { services } = fastify.project;
   fastify.get(`${options.prefix}/getMappingList`, {
-    onRequest: [fastify.account.authenticate.user, fastify.account.authenticate.admin]
+    onRequest: [authenticate.user, authenticate.admin]
   }, async () => {
-    return await fastify.project.services.main.getMappingList();
+    return await services.main.getMappingList();
   });
 
   fastify.get(`${options.prefix}/getMappingTypeList`, {
-    onRequest: [fastify.account.authenticate.user, fastify.account.authenticate.admin]
+    onRequest: [authenticate.user, authenticate.admin]
   }, async () => {
-    return await fastify.project.services.main.getMappingTypeList();
+    return await services.main.getMappingTypeList();
   });
 
   fastify.post(`${options.prefix}/addOrSaveMappingType`, {
-    onRequest: [fastify.account.authenticate.user, fastify.account.authenticate.admin], schema: {
+    onRequest: [authenticate.user, authenticate.admin], schema: {
       body: {
         type: 'object', required: ['value', 'label'], properties: {
           value: { type: 'string' }, label: { type: 'string' }
@@ -22,13 +24,13 @@ module.exports = fp(async (fastify, options) => {
       }
     }
   }, async (request) => {
-    await fastify.project.services.main.addOrSaveMappingType(request.body);
+    await services.main.addOrSaveMappingType(request.body);
     return {};
   });
 
 
   fastify.post(`${options.prefix}/addOrSaveMapping`, {
-    onRequest: [fastify.account.authenticate.user, fastify.account.authenticate.admin], schema: {
+    onRequest: [authenticate.user, authenticate.admin], schema: {
       body: {
         type: 'object', required: ['value', 'type', 'label'], properties: {
           value: { type: 'string' }, type: { type: 'string' }, label: { type: 'string' }
@@ -36,12 +38,12 @@ module.exports = fp(async (fastify, options) => {
       }
     }
   }, async (request) => {
-    await fastify.project.services.main.addOrSaveMapping(request.body);
+    await services.main.addOrSaveMapping(request.body);
     return {};
   });
 
   fastify.post(`${options.prefix}/deleteMapping`, {
-    onRequest: [fastify.account.authenticate.user, fastify.account.authenticate.admin], schema: {
+    onRequest: [authenticate.user, authenticate.admin], schema: {
       body: {
         type: 'object', required: ['id'], properties: {
           id: { type: 'number' }
@@ -50,12 +52,12 @@ module.exports = fp(async (fastify, options) => {
     }
   }, async (request) => {
     const { id } = request.body;
-    await fastify.project.services.main.deleteMapping({ id });
+    await services.main.deleteMapping({ id });
     return {};
   });
 
   fastify.get(`${options.prefix}/getDataList`, {
-    schema: {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
       query: {
         type: 'object', properties: {
           filter: {
@@ -70,11 +72,14 @@ module.exports = fp(async (fastify, options) => {
     const { filter, perPage, currentPage } = Object.assign({
       perPage: 20, currentPage: 1, filter: {}
     }, request.query);
-    return await fastify.project.services.main.getDataList({ filter, perPage, currentPage });
+
+    return await services.main.getDataList({
+      filter, perPage, currentPage, createTenantUserId: request.tenantInfo.tenantUser.id
+    });
   });
 
   fastify.get(`${options.prefix}/getDataDetail`, {
-    schema: {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
       query: {
         type: 'object', required: ['id'], properties: {
           id: { type: 'string' }
@@ -83,10 +88,11 @@ module.exports = fp(async (fastify, options) => {
     }
   }, async (request) => {
     const { id } = request.query;
-    return await fastify.project.services.main.getDataDetail({ id });
+    return await services.main.getDataDetail({ id, createTenantUserId: request.tenantInfo.tenantUser.id });
   });
 
   fastify.get(`${options.prefix}/getFileData`, {
+    onRequest: [authenticate.user, authenticate.tenant],
     schema: {
       query: {
         type: 'object', required: ['id'], properties: {
@@ -98,11 +104,17 @@ module.exports = fp(async (fastify, options) => {
     const { filter, perPage, currentPage, id } = Object.assign({
       perPage: 20, currentPage: 1, filter: {}
     }, request.query);
-    return await fastify.project.services.main.getFileData({ id, filter, perPage, currentPage });
+    return await services.main.getFileData({
+      id,
+      filter,
+      perPage,
+      currentPage,
+      createTenantUserId: request.tenantInfo.tenantUser.id
+    });
   });
 
   fastify.post(`${options.prefix}/addData`, {
-    schema: {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
       body: {
         type: 'object',
         required: ['year', 'file', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee'],
@@ -129,12 +141,13 @@ module.exports = fp(async (fastify, options) => {
       }
     }
   }, async (request) => {
-    await fastify.project.services.main.addData(request.body);
+    const tenantId = request.tenantInfo.tenant.id, createTenantUserId = request.tenantInfo.tenantUser.id;
+    await services.main.addData(Object.assign({}, request.body, { tenantId, createTenantUserId }));
     return {};
   });
 
   fastify.post(`${options.prefix}/deleteFileDataSource`, {
-    schema: {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
       body: {
         type: 'object', required: ['id'], properties: {
           id: { type: 'string' }
@@ -142,12 +155,13 @@ module.exports = fp(async (fastify, options) => {
       }
     }
   }, async (request) => {
-    await fastify.project.services.main.deleteFileDataSource(request.body);
+    const createTenantUserId = request.tenantInfo.tenantUser.id;
+    await services.main.deleteFileDataSource(Object.assign({}, request.body, { createTenantUserId }));
     return {};
   });
 
   fastify.post(`${options.prefix}/deleteFileData`, {
-    schema: {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
       body: {
         type: 'object', required: ['id'], properties: {
           id: { type: 'string' }
@@ -155,7 +169,8 @@ module.exports = fp(async (fastify, options) => {
       }
     }
   }, async (request) => {
-    await fastify.project.services.main.deleteFileData(request.body);
+    const createTenantUserId = request.tenantInfo.tenantUser.id;
+    await services.main.deleteFileData(Object.assign({}, request.body, { createTenantUserId }));
     return {};
   });
 });

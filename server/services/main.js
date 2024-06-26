@@ -64,21 +64,41 @@ module.exports = fp(async (fastify) => {
     await current.destroy();
   };
 
-  const getDataList = async ({ filter, perPage, currentPage }) => {
+  const getDataList = async ({ filter, perPage, currentPage, createTenantUserId }) => {
+    const queryFilter = {
+      createTenantUserId
+    };
+
     const { count, rows } = await fastify.project.models.dataFile.findAndCountAll({
-      include: [fastify.project.models.dataCompany], offset: currentPage * (currentPage - 1), limit: perPage
+      include: [fastify.project.models.dataCompany],
+      where: Object.assign({}, queryFilter),
+      offset: currentPage * (currentPage - 1),
+      limit: perPage
     });
 
     return { pageData: rows, totalCount: count };
   };
 
-  const getDataDetail = async ({ id }) => {
+  const getDataDetail = async ({ id, createTenantUserId }) => {
     return await fastify.project.models.dataFile.findByPk(id, {
-      include: [fastify.project.models.dataCompany]
+      include: [fastify.project.models.dataCompany], where: {
+        createTenantUserId
+      }
     });
   };
 
-  const addData = async ({ year, tag, serviceFee, recruitmentFee, trainingFee, travelFee, others, file }) => {
+  const addData = async ({
+                           year,
+                           tag,
+                           serviceFee,
+                           recruitmentFee,
+                           trainingFee,
+                           travelFee,
+                           others,
+                           file,
+                           createTenantUserId,
+                           tenantId
+                         }) => {
     const fileInfo = await fastify.fileManager.services.fileRecord.getFileInfo({ id: file.id });
     const parseRes = await fileParse(path.resolve(fastify.fileManager.options.root, fileInfo.targetFileName));
     if (!parseRes.result) {
@@ -101,10 +121,7 @@ module.exports = fp(async (fastify) => {
     const t = await fastify.sequelize.instance.transaction();
     try {
       const dataFile = await fastify.project.models.dataFile.create({
-        fileId: file.id,
-        createTenantUserId: '697601ee-fc3e-4943-9abd-4fdd09fa8b16',
-        tenantOrgId: 2,
-        tenantId: '878a3e14-750f-4594-87e0-0720f4c441cf'
+        fileId: file.id, createTenantUserId: createTenantUserId, tenantOrgId: 2, tenantId
       }, { transaction: t });
 
       await fastify.project.models.dataSource.bulkCreate(parseRes.output.map((item) => Object.assign({}, item, {
@@ -131,8 +148,14 @@ module.exports = fp(async (fastify) => {
 
   };
 
-  const getFileData = async ({ id, filter, perPage, currentPage }) => {
+  const getFileData = async ({ id, filter, perPage, currentPage, createTenantUserId }) => {
     const queryFilter = Object.assign({}, { dataFileId: id });
+
+    if (!await getDataDetail({ id, createTenantUserId })) {
+      throw new Error('数据未找到');
+    }
+
+
     const { count, rows } = await fastify.project.models.dataSource.findAndCountAll({
       where: queryFilter, offset: currentPage * (currentPage - 1), limit: perPage
     });

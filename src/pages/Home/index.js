@@ -1,9 +1,10 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
 import getColumns from './getColumns';
-import { Space, Button, App, Alert, Flex } from 'antd';
+import { Alert, App, Button, Flex, Space } from 'antd';
 import { useRef, useState } from 'react';
 import FormInner from './FormInner';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const Home = createWithRemoteLoader({
   modules: ['Layout@TablePage', 'Global@usePreset', 'FormInfo@useFormModal', 'Modal@useModal', 'File@Download', 'Filter']
@@ -20,7 +21,9 @@ const Home = createWithRemoteLoader({
   const ref = useRef();
   return (
     <TablePage
-      {...Object.assign({}, apis.project.getDataList, {})}
+      {...Object.assign({}, apis.project.getDataList, {
+        params: getFilterValue(filter)
+      })}
       columns={[
         ...getColumns({
           downloadFile: ({ fileId, dataCompany }) => {
@@ -79,8 +82,11 @@ const Home = createWithRemoteLoader({
                 name="year"
                 picker="year"
                 interceptor={value => {
-                  console.log(value);
-                  return value;
+                  const year = dayjs(value.value).get('year');
+                  return {
+                    value: year,
+                    label: `${year}年度`
+                  };
                 }}
               />,
               <InputFilterItem label="标签" name="tag" />

@@ -1,6 +1,6 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import pages from './pages';
-import MainLayout, { BeforeLoginLayout, AfterUserLoginLayout, AfterAdminUserLoginLayout } from './MainLayout';
+import MainLayout, { AfterAdminUserLoginLayout, AfterUserLoginLayout, BeforeLoginLayout, AfterTenantUserLoginLayout } from './MainLayout';
 import './index.scss';
 
 const { Home, Detail, Account, Admin, DataMapping, InitAdmin, Error, NotFound } = pages;
@@ -9,7 +9,7 @@ const App = ({ globalPreset }) => {
   return (
     <Routes>
       <Route path="account" element={<BeforeLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} />}>
-        <Route path="*" element={<Account baseUrl="/account" />} />
+        <Route path="*" element={<Account baseUrl="/account" isTenant />} />
       </Route>
       <Route path="admin/initAdmin" element={<AfterUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
         <Route index element={<InitAdmin baseUrl="/admin" />} />
@@ -43,11 +43,6 @@ const App = ({ globalPreset }) => {
                   key: 'permission',
                   title: '应用权限管理',
                   path: '/admin/permission'
-                },
-                {
-                  key: 'mapping',
-                  title: '数据字典管理',
-                  path: '/admin/mapping'
                 }
               ]
             }}
@@ -58,7 +53,7 @@ const App = ({ globalPreset }) => {
         <Route path="/admin/mapping" element={<DataMapping />} />
         <Route path="*" element={<Admin baseUrl="/admin" />} />
       </Route>
-      <Route element={<AfterUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
+      <Route element={<AfterTenantUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
         <Route index element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="admin/*" element={<InitAdmin baseUrl="/admin" />} />

@@ -18,7 +18,7 @@ const registry = {
 const componentsCoreRemote = {
   ...registry,
   remote: 'components-core',
-  defaultVersion: '0.1.69'
+  defaultVersion: '0.1.75'
 };
 
 export const globalInit = async () => {
@@ -122,7 +122,7 @@ export const globalInit = async () => {
       'components-account': {
         ...registry,
         remote: 'components-account',
-        defaultVersion: '0.2.1'
+        defaultVersion: '0.2.2'
       },
       'data-source':
         process.env.NODE_ENV === 'development'

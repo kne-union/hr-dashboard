@@ -50,5 +50,5 @@ export const deleteFileData = {
 
 export const deleteFileDataSource = {
   url: '/api/deleteFileDataSource',
-  method: 'post'
+  method: 'POST'
 };

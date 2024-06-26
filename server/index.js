@@ -13,7 +13,8 @@ fastify.register(fastifyEnv, {
       DB_USERNAME: { type: 'string' },
       DB_PASSWORD: { type: 'string' },
       DB_DATABASE: { type: 'string' },
-      ENV: { type: 'string' }
+      ENV: { type: 'string' },
+      PORT: { type: 'number' }
     }
   }
 });
@@ -52,7 +53,7 @@ fastify.register(require('fastify-plugin')(async (fastify) => {
 
 fastify.register(require('@kne/fastify-response-data-format'));
 
-fastify.then(()=>{
+fastify.then(() => {
   fastify.listen({ port: fastify.config.PORT }, (err, address) => {
     if (err) throw err;
     // Server is now listening on ${address}
