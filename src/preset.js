@@ -124,16 +124,16 @@ export const globalInit = async () => {
         remote: 'components-account',
         defaultVersion: '0.2.3'
       },
-      'data-source':
+      'hr-dashboard':
         process.env.NODE_ENV === 'development'
           ? {
-              remote: 'data-source',
+              remote: 'hr-dashboard',
               url: '/',
               tpl: '{{url}}'
             }
           : {
               ...registry,
-              remote: 'data-source',
+              remote: 'hr-dashboard',
               defaultVersion: process.env.DEFAULT_VERSION
             }
     }
