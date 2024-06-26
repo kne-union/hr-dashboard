@@ -69,8 +69,22 @@ module.exports = fp(async (fastify) => {
       createTenantUserId
     };
 
+    const dataCompanyQuery = {};
+
+    if (filter['year']) {
+      dataCompanyQuery['year'] = filter['year'];
+    }
+
+    if (filter['tag']) {
+      dataCompanyQuery['tag'] = {
+        [fastify.sequelize.Sequelize.Op.like]: `%${filter['tag']}%`
+      };
+    }
+
     const { count, rows } = await fastify.project.models.dataFile.findAndCountAll({
-      include: [fastify.project.models.dataCompany],
+      include: [{
+        model: fastify.project.models.dataCompany, where: Object.assign({}, dataCompanyQuery)
+      }, fastify.account.models.tenantOrg],
       where: Object.assign({}, queryFilter),
       offset: currentPage * (currentPage - 1),
       limit: perPage
@@ -81,24 +95,13 @@ module.exports = fp(async (fastify) => {
 
   const getDataDetail = async ({ id, createTenantUserId }) => {
     return await fastify.project.models.dataFile.findByPk(id, {
-      include: [fastify.project.models.dataCompany], where: {
+      include: [fastify.project.models.dataCompany, fastify.account.models.tenantOrg], where: {
         createTenantUserId
       }
     });
   };
 
-  const addData = async ({
-                           year,
-                           tag,
-                           serviceFee,
-                           recruitmentFee,
-                           trainingFee,
-                           travelFee,
-                           others,
-                           file,
-                           createTenantUserId,
-                           tenantId
-                         }) => {
+  const excelFileParse = async ({ file }) => {
     const fileInfo = await fastify.fileManager.services.fileRecord.getFileInfo({ id: file.id });
     const parseRes = await fileParse(path.resolve(fastify.fileManager.options.root, fileInfo.targetFileName));
     if (!parseRes.result) {
@@ -118,26 +121,36 @@ module.exports = fp(async (fastify) => {
     if (!(parseRes.output && parseRes.output.length > 0)) {
       throw new Error('员工数据不能为空');
     }
+
+    return parseRes;
+  };
+
+  const addData = async ({
+                           year,
+                           tag,
+                           tenantOrgId,
+                           serviceFee,
+                           recruitmentFee,
+                           trainingFee,
+                           travelFee,
+                           others,
+                           file,
+                           createTenantUserId,
+                           tenantId
+                         }) => {
+    const parseRes = await excelFileParse({ file });
     const t = await fastify.sequelize.instance.transaction();
     try {
       const dataFile = await fastify.project.models.dataFile.create({
-        fileId: file.id, createTenantUserId: createTenantUserId, tenantOrgId: 2, tenantId
+        fileId: file.id, createTenantUserId: createTenantUserId, tenantOrgId, tenantId
       }, { transaction: t });
 
       await fastify.project.models.dataSource.bulkCreate(parseRes.output.map((item) => Object.assign({}, item, {
-        dataFileId: dataFile.id, tenantId: '878a3e14-750f-4594-87e0-0720f4c441cf'
+        dataFileId: dataFile.id, tenantId
       })), { transaction: t });
 
       await fastify.project.models.dataCompany.create({
-        year,
-        tag,
-        serviceFee,
-        recruitmentFee,
-        trainingFee,
-        travelFee,
-        others,
-        dataFileId: dataFile.id,
-        tenantId: '878a3e14-750f-4594-87e0-0720f4c441cf'
+        year, tag, serviceFee, recruitmentFee, trainingFee, travelFee, others, dataFileId: dataFile.id, tenantId
       }, { transaction: t });
 
       await t.commit();
@@ -145,7 +158,52 @@ module.exports = fp(async (fastify) => {
       await t.rollback();
       throw e;
     }
+  };
 
+  const saveCompanyData = async ({ id, ...targetData }) => {
+    const dataFile = await fastify.project.models.dataFile.findByPk(id);
+    if (!dataFile) {
+      throw new Error('数据集已不存在');
+    }
+    const dataCompany = await fastify.project.models.dataCompany.findOne({
+      where: {
+        dataFileId: dataFile.id
+      }
+    });
+
+    if (!dataCompany) {
+      throw new Error('关联的公司信息已不存在');
+    }
+    ['year', 'tag', 'tenantOrgId', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee', 'others'].forEach((name) => {
+      if (targetData[name]) {
+        dataCompany[name] = targetData[name];
+      }
+    });
+
+    await dataCompany.save();
+  };
+
+  const reuploadData = async ({ id, tenantId, file }) => {
+    const parseRes = await excelFileParse({ file });
+    const dataFile = await fastify.project.models.dataFile.findByPk(id);
+    if (!dataFile) {
+      throw new Error('数据集已不存在');
+    }
+    const t = await fastify.sequelize.instance.transaction();
+    try {
+      await fastify.project.models.dataSource.destroy({
+        where: {
+          dataFileId: dataFile.id
+        }, transaction: t
+      });
+      await fastify.project.models.dataSource.bulkCreate(parseRes.output.map((item) => Object.assign({}, item, {
+        dataFileId: dataFile.id, tenantId
+      })), { transaction: t });
+      await t.commit();
+    } catch (e) {
+      await t.rollback();
+      throw e;
+    }
   };
 
   const getFileData = async ({ id, filter, perPage, currentPage, createTenantUserId }) => {
@@ -209,6 +267,8 @@ module.exports = fp(async (fastify) => {
     getDataDetail,
     getFileData,
     addData,
+    reuploadData,
+    saveCompanyData,
     deleteFileDataSource,
     deleteFileData
   };

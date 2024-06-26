@@ -48,6 +48,8 @@ fastify.register(require('fastify-plugin')(async (fastify) => {
     modules: [['models', await fastify.sequelize.addModels(path.resolve(__dirname, './models'))], ['services', path.resolve(__dirname, './services')], ['controllers', path.resolve(__dirname, './controllers')]]
   });
   await fastify.sequelize.sync();
+}, {
+  name: 'project', dependencies: ['fastify-account']
 }));
 
 

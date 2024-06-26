@@ -7,6 +7,12 @@ const getColumns = ({ downloadFile }) => {
       valueOf: item => item.dataCompany?.year
     },
     {
+      name: 'company',
+      title: '所属公司',
+      type: 'other',
+      valueOf: item => item.tenantOrg?.name
+    },
+    {
       name: 'tag',
       title: '标签',
       type: 'other',

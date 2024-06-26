@@ -33,6 +33,16 @@ export const addData = {
   method: 'POST'
 };
 
+export const reuploadData = {
+  url: '/api/reuploadData',
+  method: 'POST'
+};
+
+export const saveCompanyData = {
+  url: '/api/saveCompanyData',
+  method: 'POST'
+};
+
 export const getDataDetail = {
   url: '/api/getDataDetail',
   method: 'GET'

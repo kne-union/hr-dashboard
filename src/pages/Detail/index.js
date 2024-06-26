@@ -1,25 +1,27 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Fetch from '@kne/react-fetch';
 import dayjs from 'dayjs';
 import { App } from 'antd';
 import { useRef } from 'react';
+import { BasicForInner, EmployeeFormInner } from '@components/DataSetFormInner';
 
 const Detail = createWithRemoteLoader({
-  modules: ['Layout@TablePage', 'Descriptions', 'InfoPage', 'Global@usePreset', 'components-view:PageHeader@PageHeaderInner', 'File@Download']
+  modules: ['Layout@TablePage', 'Descriptions', 'InfoPage', 'Global@usePreset', 'components-view:PageHeader@PageHeaderInner', 'File@Download', 'FormInfo@useFormModal']
 })(({ remoteModules }) => {
-  const [TablePage, Descriptions, InfoPage, usePreset, PageHeader, Download] = remoteModules;
+  const [TablePage, Descriptions, InfoPage, usePreset, PageHeader, Download, useFormModal] = remoteModules;
   const { id } = useParams();
   const { apis, ajax } = usePreset();
   const { message } = App.useApp();
   const navigate = useNavigate();
+  const formModal = useFormModal();
   const ref = useRef();
   return (
     <Fetch
       {...Object.assign({}, apis.project.getDataDetail, {
         params: { id }
       })}
-      render={({ data }) => {
+      render={({ data, reload }) => {
         const others = [];
         (data.dataCompany?.others || []).forEach((item, index) => {
           const targetIndex = index % 2;
@@ -71,6 +73,7 @@ const Detail = createWithRemoteLoader({
                   topArea={
                     <>
                       <InfoPage>
+                        <InfoPage.Part title="所属公司">{data.tenantOrg?.name}</InfoPage.Part>
                         <InfoPage.Part title="公司数据">
                           <InfoPage.Part>
                             <Descriptions
@@ -110,16 +113,62 @@ const Detail = createWithRemoteLoader({
                         buttonOptions={{
                           list: [
                             {
+                              type: 'primary',
+                              children: '修改公司信息',
+                              onClick: () => {
+                                const formApi = formModal({
+                                  title: '修改公司信息',
+                                  formProps: {
+                                    data: Object.assign({}, data.dataCompany, {
+                                      tenantOrgId: data.tenantOrgId
+                                    }),
+                                    onSubmit: async formData => {
+                                      const { data: resData } = await ajax(
+                                        Object.assign({}, apis.project.saveCompanyData, {
+                                          data: Object.assign({}, formData, { id: data.id })
+                                        })
+                                      );
+                                      if (resData.code !== 0) {
+                                        return;
+                                      }
+                                      message.success('公司信息修改成功');
+                                      formApi.close();
+                                      reload();
+                                    }
+                                  },
+                                  children: <BasicForInner />
+                                });
+                              }
+                            },
+                            {
+                              children: '重新上传',
+                              onClick: () => {
+                                const formApi = formModal({
+                                  title: '重新上传数据集',
+                                  formProps: {
+                                    onSubmit: async formData => {
+                                      const { data: resData } = await ajax(
+                                        Object.assign({}, apis.project.reuploadData, {
+                                          data: Object.assign({}, formData, { id: data.id })
+                                        })
+                                      );
+                                      if (resData.code !== 0) {
+                                        return;
+                                      }
+                                      message.success('重新上传数据集成功');
+                                      formApi.close();
+                                      ref.current.reload();
+                                    }
+                                  },
+                                  children: <EmployeeFormInner />
+                                });
+                              }
+                            },
+                            {
                               buttonComponent: Download,
                               id: data.fileId,
                               filename: `文件${data.dataCompany?.year || ''}${data.dataCompany?.tag || ''}`,
                               children: '下载源文件'
-                            },
-                            {
-                              children: '修改公司信息'
-                            },
-                            {
-                              children: '重新上传'
                             },
                             {
                               children: '删除',

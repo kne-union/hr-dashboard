@@ -62,7 +62,7 @@ module.exports = fp(async (fastify, options) => {
         type: 'object', properties: {
           filter: {
             type: 'object', properties: {
-              type: { type: 'number' }
+              year: { type: 'string' }, tag: { type: 'string' }
             }
           }
         }
@@ -92,8 +92,7 @@ module.exports = fp(async (fastify, options) => {
   });
 
   fastify.get(`${options.prefix}/getFileData`, {
-    onRequest: [authenticate.user, authenticate.tenant],
-    schema: {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
       query: {
         type: 'object', required: ['id'], properties: {
           id: { type: 'string' }
@@ -105,11 +104,7 @@ module.exports = fp(async (fastify, options) => {
       perPage: 20, currentPage: 1, filter: {}
     }, request.query);
     return await services.main.getFileData({
-      id,
-      filter,
-      perPage,
-      currentPage,
-      createTenantUserId: request.tenantInfo.tenantUser.id
+      id, filter, perPage, currentPage, createTenantUserId: request.tenantInfo.tenantUser.id
     });
   });
 
@@ -120,6 +115,7 @@ module.exports = fp(async (fastify, options) => {
         required: ['year', 'file', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee'],
         properties: {
           year: { type: 'string' },
+          tenantOrgId: { type: 'number' },
           tag: { type: 'string' },
           serviceFee: { type: 'number' },
           recruitmentFee: { type: 'number' },
@@ -143,6 +139,53 @@ module.exports = fp(async (fastify, options) => {
   }, async (request) => {
     const tenantId = request.tenantInfo.tenant.id, createTenantUserId = request.tenantInfo.tenantUser.id;
     await services.main.addData(Object.assign({}, request.body, { tenantId, createTenantUserId }));
+    return {};
+  });
+
+  fastify.post(`${options.prefix}/reuploadData`, {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
+      body: {
+        type: 'object', required: ['id', 'file'], properties: {
+          id: { type: 'number' }, file: {
+            type: 'object', required: ['id'], properties: {
+              id: { type: 'string' }
+            }
+          }
+        }
+      }
+    }
+  }, async (request) => {
+    const tenantId = request.tenantInfo.tenant.id;
+    await services.main.reuploadData(Object.assign({}, request.body, { tenantId }));
+    return {};
+  });
+
+  fastify.post(`${options.prefix}/saveCompanyData`, {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
+      body: {
+        type: 'object',
+        required: ['id', 'year', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee'],
+        properties: {
+          id: { type: 'string' },
+          year: { type: 'string' },
+          tenantOrgId: { type: 'number' },
+          tag: { type: 'string' },
+          serviceFee: { type: 'number' },
+          recruitmentFee: { type: 'number' },
+          trainingFee: { type: 'number' },
+          travelFee: { type: 'number' },
+          others: {
+            type: 'array', items: {
+              type: 'object', required: ['name', 'fee'], properties: {
+                name: { type: 'string' }, fee: { type: 'number' }
+              }
+            }
+          }
+        }
+      }
+    }
+  }, async (request) => {
+    await services.main.saveCompanyData(Object.assign({}, request.body));
     return {};
   });
 

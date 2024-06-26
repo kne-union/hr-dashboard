@@ -2,7 +2,7 @@ import { createWithRemoteLoader } from '@kne/remote-loader';
 import getColumns from './getColumns';
 import { Alert, App, Button, Flex, Space } from 'antd';
 import { useRef, useState } from 'react';
-import FormInner from './FormInner';
+import FormInner, { BasicForInner, EmployeeFormInner } from '@components/DataSetFormInner';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 
@@ -22,7 +22,7 @@ const Home = createWithRemoteLoader({
   return (
     <TablePage
       {...Object.assign({}, apis.project.getDataList, {
-        params: getFilterValue(filter)
+        params: { filter: getFilterValue(filter) }
       })}
       columns={[
         ...getColumns({
@@ -48,7 +48,54 @@ const Home = createWithRemoteLoader({
                 }
               },
               {
-                children: '重新上传'
+                children: '修改公司信息',
+                onClick: () => {
+                  const formApi = formModal({
+                    title: '修改公司信息',
+                    formProps: {
+                      data: Object.assign({}, item.dataCompany, {
+                        tenantOrgId: item.tenantOrgId
+                      }),
+                      onSubmit: async data => {
+                        const { data: resData } = await ajax(
+                          Object.assign({}, apis.project.saveCompanyData, {
+                            data: Object.assign({}, data, { id: item.id })
+                          })
+                        );
+                        if (resData.code !== 0) {
+                          return;
+                        }
+                        message.success('公司信息修改成功');
+                        formApi.close();
+                        ref.current.reload();
+                      }
+                    },
+                    children: <BasicForInner />
+                  });
+                }
+              },
+              {
+                children: '重新上传',
+                onClick: () => {
+                  const formApi = formModal({
+                    title: '重新上传数据集',
+                    formProps: {
+                      onSubmit: async data => {
+                        const { data: resData } = await ajax(
+                          Object.assign({}, apis.project.reuploadData, {
+                            data: Object.assign({}, data, { id: item.id })
+                          })
+                        );
+                        if (resData.code !== 0) {
+                          return;
+                        }
+                        message.success('重新上传数据集成功');
+                        formApi.close();
+                      }
+                    },
+                    children: <EmployeeFormInner />
+                  });
+                }
               },
               {
                 children: '删除',

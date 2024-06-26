@@ -12,8 +12,10 @@ module.exports = ({ DataTypes }) => {
       }, createTenantUserId: {
         type: DataTypes.UUID, allowNull: false
       }
-    }, associate: ({ dataFile, dataCompany }) => {
+    }, associate: ({ dataFile, dataCompany }, fastify) => {
+      const { tenantOrg } = fastify.account.models;
       dataFile.hasOne(dataCompany, { foreignKey: 'dataFileId' });
+      dataFile.belongsTo(tenantOrg);
     }
   };
 };
