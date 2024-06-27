@@ -42,7 +42,7 @@ export const globalInit = async () => {
         const searchParams = new URLSearchParams(window.location.search);
         const referer = encodeURIComponent(window.location.pathname + window.location.search);
         searchParams.append('referer', referer);
-        window.location.hash = '/account/login?' + searchParams.toString();
+        window.location.href = '/account/login?' + searchParams.toString();
         response.showError = false;
       }
       return response;
