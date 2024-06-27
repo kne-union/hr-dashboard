@@ -3,7 +3,6 @@ import getColumns from './getColumns';
 import { Space, Button, App } from 'antd';
 import FormInner from './FormInner';
 import { useRef } from 'react';
-import { deleteMapping } from '../../apis';
 
 const DataMapping = createWithRemoteLoader({
   modules: ['Layout@TablePage', 'Global@usePreset', 'FormInfo@useFormModal']

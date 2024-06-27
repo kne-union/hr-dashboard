@@ -28,7 +28,7 @@ const Detail = createWithRemoteLoader({
           if (!dataOthers[targetIndex]) {
             dataOthers[targetIndex] = [];
           }
-          dataOthers[targetIndex].push({ label: item.name, content: `${item.fee}元` });
+          dataOthers[targetIndex].push({ label: item.name, content: `${Number(item.fee || 0).toLocaleString()}元` });
         });
 
         return (
@@ -41,7 +41,19 @@ const Detail = createWithRemoteLoader({
                   {...Object.assign({}, apis.project.getFileData, { params: { id: data.id } })}
                   ref={ref}
                   columns={[
-                    ...columns,
+                    ...columns.map(item => {
+                      if ((item.rule || '').indexOf('PERCENT') > -1) {
+                        return Object.assign({}, item, {
+                          valueOf: (item, { name }) => `${item[name] * 100}%`
+                        });
+                      }
+                      if ((item.rule || '').indexOf('MONEY') > -1) {
+                        return Object.assign({}, item, {
+                          valueOf: (item, { name }) => `${Number(item[name] || 0).toLocaleString()}元`
+                        });
+                      }
+                      return item;
+                    }),
                     {
                       name: 'options',
                       title: '操作',
@@ -79,18 +91,24 @@ const Detail = createWithRemoteLoader({
                             <Descriptions
                               dataSource={[
                                 [
-                                  { label: '供应商服务费', content: `${data.dataCompany?.serviceFee}元` },
+                                  {
+                                    label: '供应商服务费',
+                                    content: `${Number(data.dataCompany?.serviceFee || 0).toLocaleString()}元`
+                                  },
                                   {
                                     label: '招聘费用',
-                                    content: `${data.dataCompany?.recruitmentFee}元`
+                                    content: `${Number(data.dataCompany?.recruitmentFee || 0).toLocaleString()}元`
                                   }
                                 ],
                                 [
                                   {
                                     label: '培训费用',
-                                    content: `${data.dataCompany?.trainingFee}元`
+                                    content: `${Number(data.dataCompany?.trainingFee || 0).toLocaleString()}元`
                                   },
-                                  { label: '差旅招待报销费用', content: `${data.dataCompany?.travelFee}元` }
+                                  {
+                                    label: '差旅招待报销费用',
+                                    content: `${Number(data.dataCompany?.travelFee || 0).toLocaleString()}元`
+                                  }
                                 ]
                               ]}
                             />

@@ -424,7 +424,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -437,7 +437,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -450,7 +450,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -463,7 +463,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -503,7 +503,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -516,7 +516,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -529,7 +529,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -542,7 +542,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -555,7 +555,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -568,7 +568,7 @@
       }
     ],
     "type": "other",
-    "rule": "REQ MONEY",
+    "rule": "REQ PERCENT",
     "DataType": "DECIMAL"
   },
   {
@@ -724,6 +724,13 @@
         "title": "其他成本"
       }
     ],
+    "type": "other",
+    "rule": "MONEY",
+    "DataType": "DECIMAL"
+  },
+  {
+    "name": "otherTotalCost",
+    "title": "薪资社保外成本小计",
     "type": "other",
     "rule": "MONEY",
     "DataType": "DECIMAL"

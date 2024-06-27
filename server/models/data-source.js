@@ -12,7 +12,7 @@ module.exports = ({ DataTypes }) => {
       }
     }, transform(columns, (result, value) => {
       result[value.name] = {
-        type: DataTypes[value.DataType], comment: value.title
+        type: value.DataType === 'DECIMAL' ? DataTypes.DECIMAL(10, 2) : DataTypes[value.DataType], comment: value.title
       };
     }, {}))
   };

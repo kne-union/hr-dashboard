@@ -72,7 +72,13 @@ const fileParse = async (filePath, options) => {
     };
   };
 
-  const ruleMapping = { REQ, DATE, EMPLOYEE_TYPE_REQ, EMPLOYMENT_STATUS_REQ, MONEY, MONTH, ENUM };
+  const PERCENT = (value) => {
+    return {
+      result: isNumber(value) && value >= 0 && value <= 1, msg: '%s必须为0-100%的百分比'
+    };
+  };
+
+  const ruleMapping = { REQ, DATE, EMPLOYEE_TYPE_REQ, EMPLOYMENT_STATUS_REQ, MONEY, MONTH, PERCENT, ENUM };
 
   const validateList = async (list) => {
     const errors = [];
@@ -146,10 +152,23 @@ const fileParse = async (filePath, options) => {
     const annualPaidSalary = annualSalaryPayable - annualPaymentPerson;
     //计算企业年度缴纳五险一金 annualPaymentByTheEnterprise = monthsOfEmployment * (socialSecurityBase * (enterpriseEndowmentInsurance + enterpriseMedicalInsurance + enterpriseUnemploymentInsurance + injuryInsurance + maternityInsurance) + providentFundBase * enterpriseProvidentFund)
     const annualPaymentByTheEnterprise = monthsOfEmployment * (Number(item.socialSecurityBase || 0) * (Number(item.enterpriseMedicalInsurance || 0) + Number(item.enterpriseMedicalInsurance || 0) + Number(item.enterpriseUnemploymentInsurance || 0) + Number(item.injuryInsurance || 0) + Number(item.maternityInsurance || 0)) + Number(item.providentFundBase || 0) * Number(item.enterpriseProvidentFund || 0));
+    //计算额外保险小计 additionalInsuranceExpenses = companyAnnuity + supplementaryMedicalInsurance + criticalIllnessInsurance + accidentInsurance + otherInsurance
+    const additionalInsuranceExpenses = Number(item.companyAnnuity || 0) + Number(item.supplementaryMedicalInsurance || 0) + Number(item.criticalIllnessInsurance || 0) + Number(item.accidentInsurance || 0) + Number(item.otherInsurance || 0);
+    //计算薪资社保外成本小计 otherTotalCost = disabilityBenefits unionFees laborInsuranceFee annualPhysicalExamination otherBenefits otherCostAmounts
+    const otherTotalCost = Number(item.disabilityBenefits || 0) + Number(item.unionFees || 0) + Number(item.laborInsuranceFee || 0) + Number(item.annualPhysicalExamination || 0) + Number(item.otherBenefits || 0) + Number(item.otherCostAmounts || 0);
+
     //计算 totalCost = supplierServiceFee + resignationCompensation + annualSalaryPayable + annualPaymentByTheEnterprise
-    const totalCost = Number(item.supplierServiceFee || 0) + Number(item.resignationCompensation || 0) + annualSalaryPayable + annualPaymentByTheEnterprise;
+    const totalCost = Number(item.supplierServiceFee || 0) + Number(item.resignationCompensation || 0) + annualSalaryPayable + annualPaymentByTheEnterprise + additionalInsuranceExpenses + otherTotalCost;
     return Object.assign({}, item, {
-      monthsOfEmployment, annualAllowance, annualSalaryPayable, annualPaymentPerson, annualPaidSalary, totalCost
+      monthsOfEmployment,
+      annualAllowance,
+      annualSalaryPayable,
+      annualPaymentByTheEnterprise,
+      annualPaymentPerson,
+      annualPaidSalary,
+      additionalInsuranceExpenses,
+      otherTotalCost,
+      totalCost
     });
   });
 
