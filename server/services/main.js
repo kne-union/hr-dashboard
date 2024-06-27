@@ -184,11 +184,15 @@ module.exports = fp(async (fastify) => {
     if (!dataCompany) {
       throw new Error('关联的公司信息已不存在');
     }
-    ['year', 'tag', 'tenantOrgId', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee'].forEach((name) => {
+    ['year', 'tag', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee'].forEach((name) => {
       if (targetData[name]) {
         dataCompany[name] = targetData[name];
       }
     });
+
+    if (targetData['tenantOrgId']) {
+      dataFile.tenantOrgId = targetData['tenantOrgId'];
+    }
 
     const t = await fastify.sequelize.instance.transaction();
     try {
@@ -201,6 +205,7 @@ module.exports = fp(async (fastify) => {
         return Object.assign({}, item, { dataCompanyId: dataCompany.id });
       }), { transaction: t });
       await dataCompany.save({ transaction: t });
+      await dataFile.save({ transaction: t });
       await t.commit();
     } catch (e) {
       await t.rollback();
