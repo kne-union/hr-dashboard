@@ -6,7 +6,7 @@ const fileParse = require('./file-parse');
   const fileData = await fileParse(path.resolve(__dirname, './template.xlsx'), {
     enumValidate: async ({ type, value }) => {
       return {
-        result: false, msg: '%s不合法'
+        result: true, msg: '%s不合法'
       };
     }
   });

@@ -1,6 +1,6 @@
 const columns = require('../../public/columns.json');
 const transform = require('lodash/transform');
-module.exports = ({DataTypes}) => {
+module.exports = ({ DataTypes }) => {
   return {
     model: Object.assign({}, {
       id: {
@@ -12,7 +12,7 @@ module.exports = ({DataTypes}) => {
       }
     }, transform(columns, (result, value) => {
       result[value.name] = {
-        type: DataTypes[value.DataType]
+        type: DataTypes[value.DataType], comment: value.title
       };
     }, {}))
   };

@@ -176,6 +176,7 @@
       }
     ],
     "type": "other",
+    "rule": "MONTH",
     "DataType": "INTEGER"
   },
   {
@@ -188,6 +189,7 @@
       }
     ],
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
@@ -213,6 +215,7 @@
       }
     ],
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
@@ -231,6 +234,19 @@
   {
     "name": "yearEndBonus",
     "title": "年终奖",
+    "groupHeader": [
+      {
+        "name": "salary",
+        "title": "薪资"
+      }
+    ],
+    "type": "other",
+    "rule": "REQ MONEY",
+    "DataType": "DECIMAL"
+  },
+  {
+    "name": "overtimePay",
+    "title": "加班费",
     "groupHeader": [
       {
         "name": "salary",
@@ -362,12 +378,14 @@
     "name": "annualAllowance",
     "title": "全年补助补贴",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
     "name": "annualSalaryPayable",
     "title": "全年应发工资",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
@@ -463,14 +481,16 @@
   },
   {
     "name": "annualPaymentPerson",
-    "title": "人年度缴纳",
+    "title": "个人年度缴纳",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
     "name": "annualPaidSalary",
     "title": "全年实发工资",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
@@ -553,8 +573,9 @@
   },
   {
     "name": "annualPaymentByTheEnterprise",
-    "title": "企业年度缴纳",
+    "title": "企业年度缴纳五险一金",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
@@ -626,6 +647,7 @@
     "name": "additionalInsuranceExpenses",
     "title": "额外保险支出小计",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
@@ -703,12 +725,14 @@
       }
     ],
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   },
   {
     "name": "totalCost",
     "title": "总成本",
     "type": "other",
+    "rule": "MONEY",
     "DataType": "DECIMAL"
   }
 ]

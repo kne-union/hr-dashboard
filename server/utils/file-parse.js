@@ -66,7 +66,13 @@ const fileParse = async (filePath, options) => {
     };
   };
 
-  const ruleMapping = { REQ, DATE, EMPLOYEE_TYPE_REQ, EMPLOYMENT_STATUS_REQ, MONEY, ENUM };
+  const MONTH = (value) => {
+    return {
+      result: isNumber(value) && value >= 1 && value <= 12, msg: '%s必须为1-12合法月份'
+    };
+  };
+
+  const ruleMapping = { REQ, DATE, EMPLOYEE_TYPE_REQ, EMPLOYMENT_STATUS_REQ, MONEY, MONTH, ENUM };
 
   const validateList = async (list) => {
     const errors = [];
@@ -124,7 +130,30 @@ const fileParse = async (filePath, options) => {
       result: false, errorFile: buffer
     };
   }
-  return { result: true, output: list };
+
+  //进行计算逻辑
+
+  const computedList = list.map((item) => {
+    //计算在职月份: 如果填写则取该值，如果没有填写则默认取 12
+    const monthsOfEmployment = item.monthsOfEmployment || 12;
+    //计算全年补助 annualAllowance = (mealAllowance+transportationAllowance+communicationAllowance)*monthsOfEmployment
+    const annualAllowance = (Number(item.mealAllowance || 0) + Number(item.transportationAllowance || 0) + Number(item.communicationAllowance || 0)) * monthsOfEmployment;
+    //计算全年应发工资 annualSalaryPayable = monthsOfEmployment * basicSalary + bonus + yearEndBonus + annualAllowance
+    const annualSalaryPayable = monthsOfEmployment * Number(item.basicSalary || 0) + Number(item.bonus || 0) + Number(item.yearEndBonus || 0);
+    //计算个人年度缴纳 annualPaymentPerson = monthsOfEmployment * (socialSecurityBase * (personalEndowmentInsurance+personalMedicalInsurance+personalUnemploymentInsurance)+ providentFundBase * personalProvidentFund)+personalIncomeTax
+    const annualPaymentPerson = monthsOfEmployment * (Number(item.socialSecurityBase || 0) * (Number(item.personalEndowmentInsurance || 0) + Number(item.personalMedicalInsurance || 0) + Number(item.personalUnemploymentInsurance || 0)) + Number(item.providentFundBase || 0) * Number(item.personalProvidentFund || 0)) + Number(item.personalIncomeTax || 0);
+    //计算全年实发工资 annualPaidSalary = annualSalaryPayable - annualPaymentPerson
+    const annualPaidSalary = annualSalaryPayable - annualPaymentPerson;
+    //计算企业年度缴纳五险一金 annualPaymentByTheEnterprise = monthsOfEmployment * (socialSecurityBase * (enterpriseEndowmentInsurance + enterpriseMedicalInsurance + enterpriseUnemploymentInsurance + injuryInsurance + maternityInsurance) + providentFundBase * enterpriseProvidentFund)
+    const annualPaymentByTheEnterprise = monthsOfEmployment * (Number(item.socialSecurityBase || 0) * (Number(item.enterpriseMedicalInsurance || 0) + Number(item.enterpriseMedicalInsurance || 0) + Number(item.enterpriseUnemploymentInsurance || 0) + Number(item.injuryInsurance || 0) + Number(item.maternityInsurance || 0)) + Number(item.providentFundBase || 0) * Number(item.enterpriseProvidentFund || 0));
+    //计算 totalCost = supplierServiceFee + resignationCompensation + annualSalaryPayable + annualPaymentByTheEnterprise
+    const totalCost = Number(item.supplierServiceFee || 0) + Number(item.resignationCompensation || 0) + annualSalaryPayable + annualPaymentByTheEnterprise;
+    return Object.assign({}, item, {
+      monthsOfEmployment, annualAllowance, annualSalaryPayable, annualPaymentPerson, annualPaidSalary, totalCost
+    });
+  });
+
+  return { result: true, output: computedList };
 };
 
 module.exports = fileParse;
