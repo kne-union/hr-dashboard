@@ -1,4 +1,4 @@
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { globalInit } from './preset';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -8,9 +8,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const renderRoot = async App => {
   const globalPreset = await globalInit();
   root.render(
-    <HashRouter>
+    <BrowserRouter>
       <App themeToken={globalPreset.themeToken} globalPreset={globalPreset} />
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
