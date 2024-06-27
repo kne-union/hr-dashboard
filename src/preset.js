@@ -122,7 +122,7 @@ export const globalInit = async () => {
       'components-account': {
         ...registry,
         remote: 'components-account',
-        defaultVersion: '0.2.3'
+        defaultVersion: '0.2.4'
       },
       'hr-dashboard':
         process.env.NODE_ENV === 'development'

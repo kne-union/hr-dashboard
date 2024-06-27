@@ -1,10 +1,9 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import UserTool from '@components/UserTool';
 
 const RightOptions = createWithRemoteLoader({
-  modules: ['components-core:Global@GetGlobal']
+  modules: ['components-core:Global@GetGlobal', 'components-account:UserTool']
 })(({ remoteModules }) => {
-  const [GetGlobal] = remoteModules;
+  const [GetGlobal, UserTool] = remoteModules;
 
   return (
     <GetGlobal globalKey="userInfo">

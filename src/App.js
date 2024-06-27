@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import pages from './pages';
 import MainLayout, { AfterAdminUserLoginLayout, AfterUserLoginLayout, BeforeLoginLayout, AfterTenantUserLoginLayout } from './MainLayout';
+import RightOptions from './RightOptions';
 import './index.scss';
 
 const { Home, Detail, Account, Admin, DataMapping, InitAdmin, Error, NotFound } = pages;
@@ -44,7 +45,8 @@ const App = ({ globalPreset }) => {
                   title: '应用权限管理',
                   path: '/admin/permission'
                 }
-              ]
+              ],
+              rightOptions: <RightOptions />
             }}
           />
         }
@@ -53,7 +55,17 @@ const App = ({ globalPreset }) => {
         <Route path="/admin/mapping" element={<DataMapping />} />
         <Route path="*" element={<Admin baseUrl="/admin" />} />
       </Route>
-      <Route element={<AfterTenantUserLoginLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>
+      <Route
+        element={
+          <AfterTenantUserLoginLayout
+            preset={globalPreset}
+            themeToken={globalPreset.themeToken}
+            navigation={{
+              rightOptions: <RightOptions />
+            }}
+          />
+        }
+      >
         <Route index element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="admin/*" element={<InitAdmin baseUrl="/admin" />} />
