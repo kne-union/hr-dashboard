@@ -14,7 +14,7 @@ module.exports = ({ DataTypes }) => {
       }
     }, associate: ({ dataFile, dataCompany }, fastify) => {
       const { tenantOrg } = fastify.account.models;
-      dataFile.hasOne(dataCompany, { foreignKey: 'dataFileId' });
+      dataFile.hasOne(dataCompany);
       dataFile.belongsTo(tenantOrg);
     }
   };

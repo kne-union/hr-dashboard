@@ -15,10 +15,8 @@ module.exports = ({ DataTypes }) => {
       recruitmentFee: DataTypes.DECIMAL,
       trainingFee: DataTypes.DECIMAL,
       travelFee: DataTypes.DECIMAL,
-      others: DataTypes.JSON,
-      dataFileId: {
-        type: DataTypes.UUID, allowNull: false
-      }
+    }, associate: ({ dataCompany, dataOther }) => {
+      dataCompany.hasMany(dataOther);
     }
   };
 };

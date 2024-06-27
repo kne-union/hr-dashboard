@@ -22,13 +22,13 @@ const Detail = createWithRemoteLoader({
         params: { id }
       })}
       render={({ data, reload }) => {
-        const others = [];
-        (data.dataCompany?.others || []).forEach((item, index) => {
-          const targetIndex = index % 2;
-          if (!others[targetIndex]) {
-            others[targetIndex] = [];
+        const dataOthers = [];
+        (data.dataCompany?.dataOthers || []).forEach((item, index) => {
+          const targetIndex = Math.floor(index / 2);
+          if (!dataOthers[targetIndex]) {
+            dataOthers[targetIndex] = [];
           }
-          others[targetIndex].push({ label: item.name, content: `${item.fee}元` });
+          dataOthers[targetIndex].push({ label: item.name, content: `${item.fee}元` });
         });
 
         return (
@@ -95,9 +95,9 @@ const Detail = createWithRemoteLoader({
                               ]}
                             />
                           </InfoPage.Part>
-                          {data.dataCompany?.others && data.dataCompany?.others.length > 0 && (
+                          {data.dataCompany?.dataOthers && data.dataCompany?.dataOthers.length > 0 && (
                             <InfoPage.Part title="其他管理费用">
-                              <Descriptions dataSource={others} />
+                              <Descriptions dataSource={dataOthers} />
                             </InfoPage.Part>
                           )}
                         </InfoPage.Part>

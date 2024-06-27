@@ -1,14 +1,14 @@
 import React from 'react';
 import { preset as fetchPreset } from '@kne/react-fetch';
-import { Spin, Empty, message } from 'antd';
+import { Empty, message, Spin } from 'antd';
 import axios from 'axios';
-import { preset as remoteLoaderPreset, loadModule } from '@kne/remote-loader';
+import { loadModule, preset as remoteLoaderPreset } from '@kne/remote-loader';
 import omit from 'lodash/omit';
 import dayjs from 'dayjs';
 import { getCookies } from './common/cookies';
 import * as apis from './apis';
 
-window.PUBLIC_URL = process.env.PUBLIC_URL;
+window.PUBLIC_URL = window.runtimePublicUrl || process.env.PUBLIC_URL;
 
 const registry = {
   url: 'https://uc.fatalent.cn',

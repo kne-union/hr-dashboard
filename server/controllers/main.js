@@ -121,7 +121,7 @@ module.exports = fp(async (fastify, options) => {
           recruitmentFee: { type: 'number' },
           trainingFee: { type: 'number' },
           travelFee: { type: 'number' },
-          others: {
+          dataOthers: {
             type: 'array', items: {
               type: 'object', required: ['name', 'fee'], properties: {
                 name: { type: 'string' }, fee: { type: 'number' }
@@ -174,7 +174,7 @@ module.exports = fp(async (fastify, options) => {
           recruitmentFee: { type: 'number' },
           trainingFee: { type: 'number' },
           travelFee: { type: 'number' },
-          others: {
+          dataOthers: {
             type: 'array', items: {
               type: 'object', required: ['name', 'fee'], properties: {
                 name: { type: 'string' }, fee: { type: 'number' }
