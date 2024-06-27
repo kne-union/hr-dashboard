@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/env": "^4.3.0",
-    "@kne/fastify-account": "^1.0.0-alpha.4",
+    "@kne/fastify-account": "^1.0.0-alpha.5",
     "@kne/fastify-file-manager": "^1.0.2",
     "@kne/fastify-namespace": "^0.1.1",
     "@kne/fastify-response-data-format": "^0.1.1",
