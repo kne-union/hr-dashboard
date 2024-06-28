@@ -287,6 +287,28 @@ module.exports = fp(async (fastify) => {
     }
   };
 
+  const getTenantSetting = async ({ tenantId }) => {
+    await fastify.account.services.tenant.getTenant({ id: tenantId });
+    const setting = await fastify.project.models.dataTenantSetting.findOne({
+      where: { tenantId }
+    });
+    return setting || {};
+  };
+
+  const saveTenantSetting = async ({ tenantId, ...otherInfo }) => {
+    await fastify.account.services.tenant.getTenant({ id: tenantId });
+    const [setting] = await fastify.project.models.dataTenantSetting.findOrCreate({
+      where: { tenantId }, defaults: { tenantId }
+    });
+    ['templateFileId', 'helpFileId'].forEach((name) => {
+      if (otherInfo[name]) {
+        setting[name] = otherInfo[name];
+      }
+    });
+
+    await setting.save();
+  };
+
   fastify.project.services.main = {
     getMappingList,
     addOrSaveMapping,
@@ -300,6 +322,8 @@ module.exports = fp(async (fastify) => {
     reuploadData,
     saveCompanyData,
     deleteFileDataSource,
-    deleteFileData
+    deleteFileData,
+    getTenantSetting,
+    saveTenantSetting
   };
 });

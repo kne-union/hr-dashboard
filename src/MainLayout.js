@@ -55,13 +55,18 @@ export const AfterUserLoginLayout = createWithRemoteLoader({
 });
 
 export const AfterTenantUserLoginLayout = createWithRemoteLoader({
-  modules: ['components-account:Authenticate@TenantUserInfo']
+  modules: ['components-account:Authenticate@TenantUserInfo', 'Global@GetGlobal']
 })(({ remoteModules, ...props }) => {
-  const [TenantUserInfo] = remoteModules;
+  const [TenantUserInfo, GetGlobal] = remoteModules;
   return (
     <GlobalLayout {...props}>
       <TenantUserInfo>
-        <Outlet />
+        <GetGlobal>
+          {value => {
+            console.log(value);
+            return <Outlet />;
+          }}
+        </GetGlobal>
       </TenantUserInfo>
     </GlobalLayout>
   );

@@ -55,10 +55,20 @@ export const getFileData = {
 
 export const deleteFileData = {
   url: '/api/deleteFileData',
-  method: 'post'
+  method: 'POST'
 };
 
 export const deleteFileDataSource = {
   url: '/api/deleteFileDataSource',
+  method: 'POST'
+};
+
+export const getTenantSetting = {
+  url: '/api/getTenantSetting',
+  method: 'GET'
+};
+
+export const saveTenantSetting = {
+  url: '/api/saveTenantSetting',
   method: 'POST'
 };

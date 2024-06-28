@@ -4,7 +4,7 @@ import MainLayout, { AfterAdminUserLoginLayout, AfterUserLoginLayout, BeforeLogi
 import RightOptions from './RightOptions';
 import './index.scss';
 
-const { Home, Detail, Account, Admin, DataMapping, InitAdmin, Error, NotFound } = pages;
+const { Home, Setting, Detail, Account, Admin, DataMapping, InitAdmin, Error, NotFound } = pages;
 
 const App = ({ globalPreset }) => {
   return (
@@ -61,6 +61,13 @@ const App = ({ globalPreset }) => {
             preset={globalPreset}
             themeToken={globalPreset.themeToken}
             navigation={{
+              list: [
+                {
+                  key: 'setting',
+                  title: '设置',
+                  path: '/setting'
+                }
+              ],
               rightOptions: <RightOptions />
             }}
           />
@@ -68,6 +75,7 @@ const App = ({ globalPreset }) => {
       >
         <Route index element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
+        <Route path="/setting" element={<Setting />} />
         <Route path="admin/*" element={<InitAdmin baseUrl="/admin" />} />
       </Route>
       <Route element={<MainLayout preset={globalPreset} themeToken={globalPreset.themeToken} paths={[]} />}>

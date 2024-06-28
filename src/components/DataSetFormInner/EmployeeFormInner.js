@@ -1,30 +1,52 @@
 import { createWithRemoteLoader } from '@kne/remote-loader';
-import { Typography } from 'antd';
+import { Space } from 'antd';
+import Fetch from '@kne/react-fetch';
 
 const EmployeeFormInner = createWithRemoteLoader({
-  modules: ['FormInfo']
+  modules: ['Global@usePreset', 'FormInfo', 'File@FileLink', 'File@Download', 'Icon']
 })(({ remoteModules }) => {
-  const [FormInfo] = remoteModules;
+  const [usePreset, FormInfo, FileLink, Download, Icon] = remoteModules;
   const { Upload } = FormInfo.fields;
+  const { apis } = usePreset();
   return (
-    <FormInfo
-      title="员工数据"
-      column={1}
-      list={[
-        <Upload
-          name="file"
-          label="文件"
-          rule="REQ"
-          interceptor="array-single"
-          maxLength={1}
-          accept={['.xls', '.xlsx']}
-          description={
-            <Typography.Link href={`${window.PUBLIC_URL}/template.xlsx`} download="数据模板.xlsx">
-              点击下载excel模板
-            </Typography.Link>
-          }
-        />
-      ]}
+    <Fetch
+      {...Object.assign({}, apis.project.getTenantSetting)}
+      render={({ data }) => {
+        return (
+          <FormInfo
+            title="员工数据"
+            extra={
+              <FileLink
+                id={data.helpFileId}
+                modalProps={{
+                  title: '填写说明'
+                }}
+              >
+                <Space>
+                  <Icon colorful type="icon-color-warning-tianchong" style={{ display: 'block' }} />
+                  <span>查看填写说明</span>
+                </Space>
+              </FileLink>
+            }
+            column={1}
+            list={[
+              <Upload
+                name="file"
+                label="文件"
+                rule="REQ"
+                interceptor="array-single"
+                maxLength={1}
+                accept={['.xls', '.xlsx']}
+                description={
+                  <Download type="link" id={data.templateFileId} filename="数据模板.xlsx">
+                    点击下载excel模板
+                  </Download>
+                }
+              />
+            ]}
+          />
+        );
+      }}
     />
   );
 });

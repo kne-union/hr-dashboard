@@ -216,4 +216,26 @@ module.exports = fp(async (fastify, options) => {
     await services.main.deleteFileData(Object.assign({}, request.body, { createTenantUserId }));
     return {};
   });
+
+  // getTenantSetting
+  fastify.get(`${options.prefix}/getTenantSetting`, {
+    onRequest: [authenticate.user, authenticate.tenant]
+  }, async (request) => {
+    const tenantId = request.tenantInfo.tenant.id;
+    return await services.main.getTenantSetting({ tenantId });
+  });
+
+  fastify.post(`${options.prefix}/saveTenantSetting`, {
+    onRequest: [authenticate.user, authenticate.tenant], schema: {
+      body: {
+        type: 'object', properties: {
+          templateFileId: { type: 'string' }, helpFileId: { type: 'string' }
+        }
+      }
+    }
+  }, async (request) => {
+    const tenantId = request.tenantInfo.tenant.id;
+    await services.main.saveTenantSetting(Object.assign({}, request.body, { tenantId }));
+    return {};
+  });
 });

@@ -145,7 +145,7 @@ const fileParse = async (filePath, options) => {
     //计算全年补助 annualAllowance = (mealAllowance+transportationAllowance+communicationAllowance)*monthsOfEmployment
     const annualAllowance = (Number(item.mealAllowance || 0) + Number(item.transportationAllowance || 0) + Number(item.communicationAllowance || 0)) * monthsOfEmployment;
     //计算全年应发工资 annualSalaryPayable = monthsOfEmployment * basicSalary + bonus + yearEndBonus + annualAllowance
-    const annualSalaryPayable = monthsOfEmployment * Number(item.basicSalary || 0) + Number(item.bonus || 0) + Number(item.yearEndBonus || 0);
+    const annualSalaryPayable = monthsOfEmployment * Number(item.basicSalary || 0) + Number(item.bonus || 0) + Number(item.yearEndBonus || 0) + Number(item.overtimePay || 0);
     //计算个人年度缴纳 annualPaymentPerson = monthsOfEmployment * (socialSecurityBase * (personalEndowmentInsurance+personalMedicalInsurance+personalUnemploymentInsurance)+ providentFundBase * personalProvidentFund)+personalIncomeTax
     const annualPaymentPerson = monthsOfEmployment * (Number(item.socialSecurityBase || 0) * (Number(item.personalEndowmentInsurance || 0) + Number(item.personalMedicalInsurance || 0) + Number(item.personalUnemploymentInsurance || 0)) + Number(item.providentFundBase || 0) * Number(item.personalProvidentFund || 0)) + Number(item.personalIncomeTax || 0);
     //计算全年实发工资 annualPaidSalary = annualSalaryPayable - annualPaymentPerson

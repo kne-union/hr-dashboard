@@ -10,6 +10,7 @@ const pages = {
   Home: loadableWithProps(() => import('./Home')),
   Detail: loadableWithProps(() => import('./Detail')),
   Account: loadableWithProps(() => import('./Account')),
+  Setting: loadableWithProps(() => import('./Setting')),
   Admin: loadableWithProps(() => import('./Admin')),
   DataMapping: loadableWithProps(() => import('./DataMapping')),
   InitAdmin: loadableWithProps(() => import('./Admin').then(({ InitAdmin }) => InitAdmin)),
