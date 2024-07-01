@@ -2,12 +2,7 @@ import BasicForInner from './BasicForInner';
 import EmployeeFormInner from './EmployeeFormInner';
 
 const FormInner = () => {
-  return (
-    <>
-      <BasicForInner />
-      <EmployeeFormInner />
-    </>
-  );
+  return <BasicForInner>{<EmployeeFormInner />}</BasicForInner>;
 };
 
 export default FormInner;

@@ -111,9 +111,7 @@ module.exports = fp(async (fastify, options) => {
   fastify.post(`${options.prefix}/addData`, {
     onRequest: [authenticate.user, authenticate.tenant], schema: {
       body: {
-        type: 'object',
-        required: ['year', 'file', 'serviceFee', 'recruitmentFee', 'trainingFee', 'travelFee'],
-        properties: {
+        type: 'object', required: ['year', 'file'], properties: {
           year: { type: 'string' },
           tenantOrgId: { type: 'number' },
           tag: { type: 'string' },
@@ -229,7 +227,9 @@ module.exports = fp(async (fastify, options) => {
     onRequest: [authenticate.user, authenticate.tenant], schema: {
       body: {
         type: 'object', properties: {
-          templateFileId: { type: 'string' }, helpFileId: { type: 'string' }
+          templateFileId: { type: 'string' },
+          employeeHelperFileId: { type: 'string' },
+          companyHelperFileId: { type: 'string' }
         }
       }
     }

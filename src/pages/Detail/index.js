@@ -132,10 +132,10 @@ const Detail = createWithRemoteLoader({
                           list: [
                             {
                               type: 'primary',
-                              children: '修改公司信息',
+                              children: '编辑',
                               onClick: () => {
                                 const formApi = formModal({
-                                  title: '修改公司信息',
+                                  title: '编辑',
                                   formProps: {
                                     data: Object.assign({}, data.dataCompany, {
                                       tenantOrgId: data.tenantOrgId
@@ -185,6 +185,7 @@ const Detail = createWithRemoteLoader({
                             {
                               buttonComponent: Download,
                               id: data.fileId,
+                              icon: null,
                               filename: `文件${data.dataCompany?.year || ''}${data.dataCompany?.tag || ''}`,
                               children: '下载源文件'
                             },

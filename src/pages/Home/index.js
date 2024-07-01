@@ -48,10 +48,10 @@ const Home = createWithRemoteLoader({
                 }
               },
               {
-                children: '修改公司信息',
+                children: '编辑',
                 onClick: () => {
                   const formApi = formModal({
-                    title: '修改公司信息',
+                    title: '编辑',
                     formProps: {
                       data: Object.assign({}, item.dataCompany, {
                         tenantOrgId: item.tenantOrgId

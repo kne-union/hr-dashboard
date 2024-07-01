@@ -10,16 +10,16 @@ const EmployeeFormInner = createWithRemoteLoader({
   const { apis } = usePreset();
   return (
     <Fetch
-      {...Object.assign({}, apis.project.getTenantSetting)}
+      {...Object.assign({}, apis.project.getTenantSetting, { cache: 'tenant-setting' })}
       render={({ data }) => {
         return (
           <FormInfo
             title="员工数据"
             extra={
               <FileLink
-                id={data.helpFileId}
+                id={data.employeeHelperFileId}
                 modalProps={{
-                  title: '填写说明'
+                  title: '员工数据填写说明'
                 }}
               >
                 <Space>

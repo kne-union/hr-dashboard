@@ -1,6 +1,7 @@
 const fp = require('fastify-plugin');
 const path = require('path');
 const fileParse = require('../utils/file-parse');
+const isNil = require('lodash/isNil');
 const { InternalServerError, NotFound } = require('http-errors');
 
 module.exports = fp(async (fastify) => {
@@ -139,6 +140,7 @@ module.exports = fp(async (fastify) => {
                            year,
                            tag,
                            tenantOrgId,
+                           notHasCompanyInfo,
                            serviceFee,
                            recruitmentFee,
                            trainingFee,
@@ -150,6 +152,11 @@ module.exports = fp(async (fastify) => {
                          }) => {
     const parseRes = await excelFileParse({ file });
     const t = await fastify.sequelize.instance.transaction();
+
+    if (!notHasCompanyInfo && [serviceFee, recruitmentFee, trainingFee, travelFee].some((data) => isNil(data))) {
+      throw new Error('公司信息必填内容不能为空');
+    }
+
     try {
       const dataFile = await fastify.project.models.dataFile.create({
         fileId: file.id, createTenantUserId: createTenantUserId, tenantOrgId, tenantId
@@ -159,9 +166,12 @@ module.exports = fp(async (fastify) => {
         dataFileId: dataFile.id, tenantId
       })), { transaction: t });
 
-      await fastify.project.models.dataCompany.create({
-        year, tag, serviceFee, recruitmentFee, trainingFee, travelFee, dataOthers, dataFileId: dataFile.id, tenantId
-      }, { transaction: t, include: fastify.project.models.dataOther });
+      await fastify.project.models.dataCompany.create(Object.assign({}, {
+        year, tag, serviceFee, recruitmentFee, trainingFee, travelFee, dataFileId: dataFile.id, tenantId
+      }, dataOthers && dataOthers.length > 0 ? { dataOthers } : {}), {
+        transaction: t,
+        include: fastify.project.models.dataOther
+      });
 
       await t.commit();
     } catch (e) {
@@ -300,7 +310,7 @@ module.exports = fp(async (fastify) => {
     const [setting] = await fastify.project.models.dataTenantSetting.findOrCreate({
       where: { tenantId }, defaults: { tenantId }
     });
-    ['templateFileId', 'helpFileId'].forEach((name) => {
+    ['templateFileId', 'employeeHelperFileId', 'companyHelperFileId'].forEach((name) => {
       if (otherInfo[name]) {
         setting[name] = otherInfo[name];
       }

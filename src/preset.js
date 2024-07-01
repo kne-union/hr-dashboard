@@ -10,17 +10,6 @@ import * as apis from './apis';
 
 window.PUBLIC_URL = window.runtimePublicUrl || process.env.PUBLIC_URL;
 
-const registry = {
-  url: 'https://uc.fatalent.cn',
-  tpl: '{{url}}/packages/@kne-components/{{remote}}/{{version}}/build'
-};
-
-const componentsCoreRemote = {
-  ...registry,
-  remote: 'components-core',
-  defaultVersion: '0.1.75'
-};
-
 export const globalInit = async () => {
   const ajax = (() => {
     const instance = axios.create({
@@ -105,6 +94,17 @@ export const globalInit = async () => {
     }
   });
 
+  const registry = {
+    url: 'https://uc.fatalent.cn',
+    tpl: '{{url}}/packages/@kne-components/{{remote}}/{{version}}/build'
+  };
+
+  const componentsCoreRemote = {
+    ...registry,
+    remote: 'components-core',
+    defaultVersion: '0.2.1'
+  };
+
   remoteLoaderPreset({
     remotes: {
       default: componentsCoreRemote,
@@ -158,6 +158,7 @@ export const globalInit = async () => {
       },
       { project: apis }
     ),
+    permissionsPath: 'userInfo.tenantUser.permissions',
     themeToken: {
       colorPrimary: '#4F185A',
       colorPrimaryHover: '#702280'

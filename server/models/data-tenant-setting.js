@@ -3,8 +3,7 @@ module.exports = ({ DataTypes }) => {
     model: {
       tenantId: {
         type: DataTypes.STRING, allowNull: false
-      },
-      templateFileId: DataTypes.STRING, helpFileId: DataTypes.STRING
+      }, templateFileId: DataTypes.STRING, employeeHelperFileId: DataTypes.STRING, companyHelperFileId: DataTypes.STRING
     }
   };
 };

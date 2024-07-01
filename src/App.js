@@ -65,7 +65,8 @@ const App = ({ globalPreset }) => {
                 {
                   key: 'setting',
                   title: '设置',
-                  path: '/setting'
+                  path: '/setting',
+                  permission: 'HRD:SETTING'
                 }
               ],
               rightOptions: <RightOptions />

@@ -49,11 +49,11 @@ const Setting = createWithRemoteLoader({
                   </Upload.Field>
                 </Space>
               </InfoPage.Part>
-              <InfoPage.Part title="填写说明">
+              <InfoPage.Part title="员工信息填写说明">
                 <Space direction={'vertical'}>
-                  {data.helpFileId ? (
-                    <Download type="link" id={data.helpFileId} filename="填写说明.pdf">
-                      填写说明.pdf
+                  {data.employeeHelperFileId ? (
+                    <Download type="link" id={data.employeeHelperFileId} filename="员工信息填写说明.pdf">
+                      员工信息填写说明.pdf
                     </Download>
                   ) : (
                     '暂未设置'
@@ -66,7 +66,39 @@ const Setting = createWithRemoteLoader({
                       const { data: resData } = await ajax(
                         Object.assign({}, apis.project.saveTenantSetting, {
                           data: {
-                            helpFileId: get(file, '[0].id')
+                            employeeHelperFileId: get(file, '[0].id')
+                          }
+                        })
+                      );
+                      if (resData.code !== 0) {
+                        return;
+                      }
+                      message.success('保存成功');
+                      reload();
+                    }}
+                  >
+                    上传文件
+                  </Upload.Field>
+                </Space>
+              </InfoPage.Part>
+              <InfoPage.Part title="公司信息填写说明">
+                <Space direction={'vertical'}>
+                  {data.companyHelperFileId ? (
+                    <Download type="link" id={data.companyHelperFileId} filename="公司信息填写说明.pdf">
+                      公司信息填写说明.pdf
+                    </Download>
+                  ) : (
+                    '暂未设置'
+                  )}
+                  <Upload.Field
+                    value={null}
+                    accept={['.pdf']}
+                    maxLength={1}
+                    onChange={async file => {
+                      const { data: resData } = await ajax(
+                        Object.assign({}, apis.project.saveTenantSetting, {
+                          data: {
+                            companyHelperFileId: get(file, '[0].id')
                           }
                         })
                       );
