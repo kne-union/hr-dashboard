@@ -147,7 +147,7 @@ const fileParse = async (filePath, options) => {
       if (targetValue === '/') {
         targetValue = '';
       }
-      if (columns[index]?.name) {
+      if (columns[index]?.name && isNotEmpty(targetValue)) {
         result[columns[index]?.name] = targetValue;
       }
     }, {});
