@@ -1,24 +1,38 @@
 const xlsx = require('node-xlsx').default;
 const transform = require('lodash/transform');
-const isNil = require('lodash/isNil');
-const isDate = require('lodash/isDate');
+const isPlainObject = require('lodash/isPlainObject');
+const getValues = require('lodash/values');
+const isArray = require('lodash/isArray');
 const isNumber = require('lodash/isNumber');
 const columns = require('../../public/columns.json');
 const fs = require('fs-extra');
 const ExcelJS = require('exceljs');
+
+const isNotEmpty = value => {
+  if (isPlainObject(value)) {
+    const values = getValues(value);
+    return values.length > 0 && values.some(item => !!item);
+  } else if (isArray(value)) {
+    return value.length > 0;
+  } else if (typeof value === 'number') {
+    return !isNaN(value);
+  } else {
+    return !(value === undefined || value === null || value === '' || value.length === 0);
+  }
+};
 
 const writeErrorMessage = async (filePath, errors) => {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(filePath);
   const sheet1 = workbook.getWorksheet('A-员工维度');
   errors.forEach((item) => {
-    const { index, colIndex, msg } = item;
+    const { index, colIndex, msg, value } = item;
     const row = sheet1.getRow(index + 3);
     const cell = row.getCell(colIndex + 1);
     cell.style = Object.assign({}, cell.style, {
       fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC7CE' } }
     });
-    cell.value = `${cell.value || ''}[${msg}]`;
+    cell.value = `${value || ''}[${msg}]`;
   });
 
   return await workbook.xlsx.writeBuffer();
@@ -28,13 +42,13 @@ const fileParse = async (filePath, options) => {
   options = Object.assign({}, options);
   const REQ = (value) => {
     return {
-      result: !isNil(value), msg: '%s不能为空'
+      result: isNotEmpty(value), msg: '%s不能为空'
     };
   };
 
   const DATE = (value) => {
     return {
-      result: isDate(new Date(value)), msg: '%s必须为日期类型:YYYY/MM/DD'
+      result: !isNaN(Date.parse(value)), msg: '%s必须为日期类型:YYYY/MM/DD'
     };
   };
 
@@ -89,16 +103,22 @@ const fileParse = async (filePath, options) => {
           return;
         }
         const rules = column.rule.split(' ');
+        const hasREQ = rules[0] === 'REQ';
         for (let rule of rules) {
           const [current, ...args] = rule.split('-');
-          if (current !== 'REQ' && rules.indexOf('REQ') === -1 && !ruleMapping['REQ'](item[column.name], item, args).result) {
+          if (!hasREQ && current !== 'REQ' && !ruleMapping['REQ'](item[column.name], item, args).result) {
             continue;
           }
 
           const { result, msg } = await ruleMapping[current](item[column.name], item, args);
           if (!result) {
             errors.push({
-              index, colIndex, name: column.name, title: column.title, msg: msg.replace('%s', column.title)
+              index,
+              colIndex,
+              name: column.name,
+              title: column.title,
+              value: item[column.name],
+              msg: msg.replace('%s', column.title)
             });
             break;
           }
@@ -122,8 +142,13 @@ const fileParse = async (filePath, options) => {
     return !!item[0];
   }).map((item) => {
     return transform(item, (result, value, index) => {
+      let targetValue = value;
+      // 处理value空的情况
+      if (targetValue === '/') {
+        targetValue = '';
+      }
       if (columns[index]?.name) {
-        result[columns[index]?.name] = value;
+        result[columns[index]?.name] = targetValue;
       }
     }, {});
   });
