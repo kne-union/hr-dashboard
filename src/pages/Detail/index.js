@@ -44,7 +44,7 @@ const Detail = createWithRemoteLoader({
                     ...columns.map(item => {
                       if ((item.rule || '').indexOf('PERCENT') > -1) {
                         return Object.assign({}, item, {
-                          valueOf: (item, { name }) => `${item[name] * 100}%`
+                          valueOf: (item, { name }) => `${parseInt(item[name] * 100)}%`
                         });
                       }
                       if ((item.rule || '').indexOf('MONEY') > -1) {
