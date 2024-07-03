@@ -1,9 +1,6 @@
 module.exports = ({DataTypes}) => {
   return {
     model: {
-      id: {
-        type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true
-      },
       label: {
         type: DataTypes.STRING, allowNull: false
       }, value: {

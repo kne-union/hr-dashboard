@@ -9,7 +9,7 @@ const path = require('path');
 fastify.register(fastifyEnv, {
   dotenv: true, schema: {
     type: 'object', properties: {
-      DB_DIALECT: { type: 'string', default: 'mysql' },
+      DB_DIALECT: { type: 'string', default: 'sqlite' },
       DB_HOST: { type: 'string' },
       DB_USERNAME: { type: 'string' },
       DB_PASSWORD: { type: 'string' },
