@@ -1,5 +1,5 @@
 {
-  "name": "@kne-components/data-source",
+  "name": "@kne-components/hr-dashboard",
   "version": "0.1.0",
   "description": "同步excel数据到数据库",
   "scripts": {
