@@ -8,13 +8,14 @@ const path = require('path');
 
 fastify.register(fastifyEnv, {
   dotenv: true, schema: {
-    type: 'object', required: ['DB_HOST', 'DB_USERNAME', 'DB_PASSWORD'], properties: {
+    type: 'object', properties: {
+      DB_DIALECT: { type: 'string', default: 'mysql' },
       DB_HOST: { type: 'string' },
       DB_USERNAME: { type: 'string' },
       DB_PASSWORD: { type: 'string' },
       DB_DATABASE: { type: 'string' },
-      ENV: { type: 'string' },
-      PORT: { type: 'number' }
+      ENV: { type: 'string', default: 'local' },
+      PORT: { type: 'number', default: 8040 }
     }
   }
 });
@@ -22,7 +23,7 @@ fastify.register(fastifyEnv, {
 fastify.register(require('fastify-plugin')(async (fastify) => {
   fastify.register(require('@kne/fastify-sequelize'), {
     db: {
-      dialect: 'mysql',
+      dialect: fastify.config.DB_DIALECT,
       host: fastify.config.DB_HOST,
       database: fastify.config.DB_DATABASE,
       username: fastify.config.DB_USERNAME,
